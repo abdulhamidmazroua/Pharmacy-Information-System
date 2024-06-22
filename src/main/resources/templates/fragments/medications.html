@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pharmacy MS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+
+<!-- Body Content (Medications List) -->
+<div class="container mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Medications</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-success float-md-end" data-bs-toggle="modal" data-bs-target="#medicationModal">Add Medication</button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Search by name">
+        </div>
+        <div class="col-md-4">
+            <select class="form-control">
+                <option value="">Filter by category</option>
+                <option value="category1">Category 1</option>
+                <option value="category2">Category 2</option>
+            </select>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Dosage Strength</th>
+            <th>Expiration Date</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="#" data-bs-toggle="modal" data-bs-target="#medicationModal">Medication 1</a></td>
+            <td>Category 1</td>
+            <td>10 mg</td>
+            <td>2024-12-31</td>
+            <td>$10.00</td>
+            <td>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#medicationModal">Edit</button>
+                <button class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </tr>
+
+        <!-- Repeat for other medications -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Medication Modal -->
+<div class="modal fade" id="medicationModal" tabindex="-1" aria-labelledby="medicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="medicationModalLabel">Medication Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="medicationName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="medicationName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicationCategory" class="form-label">Category</label>
+                        <select class="form-control" id="medicationCategory">
+                            <option value="category1">Category 1</option>
+                            <option value="category2">Category 2</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicationDosage" class="form-label">Dosage Strength</label>
+                        <input type="text" class="form-control" id="medicationDosage">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicationExpiration" class="form-label">Expiration Date</label>
+                        <input type="date" class="form-control" id="medicationExpiration">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicationPrice" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="medicationPrice">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

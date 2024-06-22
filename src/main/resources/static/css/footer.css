@@ -1,0 +1,26 @@
+/* Footer Styling */
+.footer-teal {
+    background-color: #234747; /* Teal background color */
+    color: #ffffff; /* White text color */
+    padding: 20px 0; /* Padding top and bottom */
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+.footer-teal .footer-contact ul {
+    list-style-type: none; /* Remove default list styles */
+    padding: 0;
+}
+
+.footer-teal .footer-contact ul li {
+    display: inline-block;
+    margin-right: 20px; /* Spacing between contact info items */
+}
+
+.footer-teal .footer-contact ul li a {
+    color: #ffffff; /* White text color for links */
+    text-decoration: none; /* Remove underline */
+}
+
+.footer-teal .footer-contact ul li a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

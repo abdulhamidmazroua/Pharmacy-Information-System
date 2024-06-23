@@ -1,64 +1,41 @@
 package com.hameed.springboot.pharmacyms.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/")
+@Controller
+@RequestMapping("/content/")
 public class NavigationController {
 
-    @GetMapping("dashboard")
-    public String showDashboard(Model model) {
-        model.addAttribute("fragment", "/fragments/dashboard");
-        return "layout";
-    }
-
-    @GetMapping("medications")
-    public String showMedications(Model model) {
-        model.addAttribute("fragment", "fragments/medications");
-        return "layout";
-    }
-
-    @GetMapping("sales")
-    public String showSales(Model model) {
-        model.addAttribute("fragment", "/fragments/sales");
-        return "layout";
-    }
-
-    @GetMapping("reports")
-    public String showReports(Model model) {
-        model.addAttribute("fragment", "/fragments/reports");
-        return "layout";
-    }
-
-    @GetMapping("settings")
-    public String showSettings(Model model) {
-        model.addAttribute("fragment", "/fragments/settings");
-        return "layout";
-    }
-
-    @GetMapping("/content/dashboard")
+    @GetMapping("/dashboard/")
     public String showContentDashboard() {
-        return "/fragments/dashboard";
+        return "/fragments/dashboard-frag";
     }
 
-    @GetMapping("/content/medications")
+    @GetMapping("/medications/")
     public String showContentMedications() {
-        return "/fragments/medications";
+        return "/fragments/medications-frag";
     }
 
-    @GetMapping("/content/sales")
+    @GetMapping("/sales/")
     public String showContentSales() {
-        return "/fragments/sales";
+        return "/fragments/sales-frag";
     }
 
-    @GetMapping("/content/reports")
+    @GetMapping("/reports/")
     public String showContentReports() {
-        return "/fragments/reports";
+        return "/fragments/reports-frag";
     }
 
-    @GetMapping("/content/settings")
+    @GetMapping("/settings/")
     public String showContentSettings() {
-        return "/fragments/settings";
+        return "/fragments/settings-frag";
     }
+
+    @GetMapping("/new-sale/")
+    public String newSale() {
+        return "/fragments/new-sale-frag";
+    }
+
 }

@@ -9,7 +9,7 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-teal">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="/pharmacy-ms/medications/">
                 <img src="/pharmacy-ms/images/pharmacy-logo.png" alt="Pharmaceutica Logo"> <!-- Custom styling for logo -->
                 Pharmaceutica
             </a>
@@ -20,20 +20,20 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="nav-link" href="/content/dashboard"><img src="/pharmacy-ms/images/dashboard-icon.png" alt="Dashboard" width="20"> Dashboard</a>
+                        <a class="nav-link" href="/dashboard/"><img src="/pharmacy-ms/images/dashboard-icon.png" alt="Dashboard" width="20"> Dashboard</a>
                     </li>
                     <li class="nav-item">
                     <li class="nav-item">
-                        <a class="nav-link" href="/content/medications"><img src="/pharmacy-ms/images/drugs-icon.png" alt="Drugs" width="20"> Medications</a>
+                        <a class="nav-link" href="/medications/"><img src="/pharmacy-ms/images/drugs-icon.png" alt="Drugs" width="20"> Medications</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/content/sales"><img src="/pharmacy-ms/images/sales-icon.png" alt="Sales" width="20"> Sales</a>
+                        <a class="nav-link" href="/sales/"><img src="/pharmacy-ms/images/sales-icon.png" alt="Sales" width="20"> Sales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/content/reports"><img src="/pharmacy-ms/images/reports-icon.png" alt="Reports" width="20"> Reports</a>
+                        <a class="nav-link" href="/reports/"><img src="/pharmacy-ms/images/reports-icon.png" alt="Reports" width="20"> Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/content/settings"><img src="/pharmacy-ms/images/settings-icon.png" alt="Settings" width="20"> Settings</a>
+                        <a class="nav-link" href="/settings/"><img src="/pharmacy-ms/images/settings-icon.png" alt="Settings" width="20"> Settings</a>
                     </li>
                 </ul>
             </div>

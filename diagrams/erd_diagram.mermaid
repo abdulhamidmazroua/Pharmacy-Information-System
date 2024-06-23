@@ -1,0 +1,60 @@
+erDiagram
+    USER {
+        String username PK
+        String password
+        String enabled
+    }
+
+    SALES_HEADER {
+        Long id PK
+        String customer_name
+        Date date
+        Double total_amount
+        String username FK
+    }
+
+    SALES_ITEM {
+        Long id PK
+        Long sales_id FK
+        Long medication_id FK
+        Integer quantity
+        Double price
+    }
+
+    MEDICATION {
+        Long id PK
+        String name
+        String description
+        String primary_uom_code FK
+        Long exp_date
+        Double price
+        Integer quantity
+        Integer dosage_strength
+    }
+
+    UNIT_OF_MEASURES {
+        Long id PK
+        String code
+        String full_name
+    }
+
+    CATEGORY {
+        Long id
+        String code PK
+        String full_name
+        String description
+        String super_category_code FK
+    }
+
+    MEDICATIONS_CATEGORIES {
+        Long medication_id FK
+        Long category_id FK
+    }
+
+    USER ||--o{ SALES_HEADER : "creates"
+    SALES_HEADER ||--o{ SALES_ITEM : "contains"
+    MEDICATION ||--o{ SALES_ITEM : "is part of"
+    MEDICATION ||--o| UNIT_OF_MEASURES : "uses"
+    CATEGORY ||--o| CATEGORY : "belongs to"
+    MEDICATION ||--o{ MEDICATIONS_CATEGORIES : "categorized by"
+    CATEGORY ||--o{ MEDICATIONS_CATEGORIES : "includes"

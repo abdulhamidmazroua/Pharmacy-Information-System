@@ -38,4 +38,4 @@ mvnw
 mvnw.cmd
 
 ### src files
-!**/src/main/resources/templates/fragments/test.html
+src/main/resources/templates/fragments/test.html

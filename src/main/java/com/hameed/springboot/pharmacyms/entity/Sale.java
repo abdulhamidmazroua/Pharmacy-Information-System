@@ -3,8 +3,6 @@ package com.hameed.springboot.pharmacyms.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +18,7 @@ public class Sale extends AbstractEntity implements Serializable {
     private String totalAmount;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
-    private List<SaleItem> salesItems;
+    private List<SalesItem> salesItems;
 
     public Sale() {
     }
@@ -47,11 +45,11 @@ public class Sale extends AbstractEntity implements Serializable {
         this.totalAmount = totalAmount;
     }
 
-    public List<SaleItem> getSalesItems() {
+    public List<SalesItem> getSalesItems() {
         return salesItems;
     }
 
-    public void setSalesItems(List<SaleItem> salesItems) {
+    public void setSalesItems(List<SalesItem> salesItems) {
         this.salesItems = salesItems;
     }
 

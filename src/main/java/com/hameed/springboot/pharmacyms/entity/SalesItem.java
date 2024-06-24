@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "sales_item", schema = "pharmacy_directory")
-public class SaleItem extends AbstractEntity implements Serializable {
+public class SalesItem extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,10 +33,10 @@ public class SaleItem extends AbstractEntity implements Serializable {
     @Column(name = "unit_price")
     private Double unitPrice;
 
-    public SaleItem() {
+    public SalesItem() {
     }
 
-    public SaleItem(String createdBy, String lastUpdateBy, Double unitPrice, Integer quantity, Medication medication, Sale sale) {
+    public SalesItem(String createdBy, String lastUpdateBy, Double unitPrice, Integer quantity, Medication medication, Sale sale) {
         super(createdBy, lastUpdateBy);
         this.unitPrice = unitPrice;
         this.quantity = quantity;

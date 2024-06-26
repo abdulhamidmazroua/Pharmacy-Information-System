@@ -11,7 +11,6 @@ public interface SalesItemDAO {
     public void save(SalesItem s);
     public void saveAll(List<SalesItem> salesItems);
     public SalesItem findById(Long id);
-    public SalesItem findBySale(Sale sale);
     public List<SalesItem> findAll(List<Long> id);
     public List<SalesItem> findAll();
     public boolean existsById(Long id);

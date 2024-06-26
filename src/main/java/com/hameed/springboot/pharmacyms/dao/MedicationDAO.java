@@ -8,9 +8,9 @@ public interface MedicationDAO {
 
     public void save(Medication m);
     public void saveAll(List<Medication> medications);
-    public Medication findById(int id);
+    public Medication findById(Long id);
     public Medication findByName(String name);
-    public List<Medication> findAll(List<Long> id);
+    public List<Medication> findAll(List<Long> ids);
     public List<Medication> findAll();
     public boolean existsById(Long id);
     public boolean existsByName(String name);

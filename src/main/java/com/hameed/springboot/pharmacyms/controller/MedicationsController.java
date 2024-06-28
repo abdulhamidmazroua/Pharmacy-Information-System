@@ -4,12 +4,16 @@ import com.hameed.springboot.pharmacyms.model.entity.Medication;
 import com.hameed.springboot.pharmacyms.service.CategoryService;
 import com.hameed.springboot.pharmacyms.service.MedicationService;
 import com.hameed.springboot.pharmacyms.service.UnitOfMeasureService;
+import com.hameed.springboot.pharmacyms.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @Controller
 @RequestMapping("/medications")
@@ -18,12 +22,17 @@ public class MedicationsController {
     private MedicationService medicationService;
     private CategoryService categoryService;
     private UnitOfMeasureService unitOfMeasureService;
+    private UserService userService;
 
     @Autowired
-    public MedicationsController(MedicationService medicationService, CategoryService categoryService, UnitOfMeasureService unitOfMeasureService) {
+    public MedicationsController(MedicationService medicationService,
+                                 CategoryService categoryService,
+                                 UnitOfMeasureService unitOfMeasureService,
+                                 UserService userService) {
         this.medicationService = medicationService;
         this.categoryService = categoryService;
         this.unitOfMeasureService = unitOfMeasureService;
+        this.userService = userService;
     }
 
     // @InitBinder works as a pre-processor

@@ -1,7 +1,7 @@
 package com.hameed.springboot.pharmacyms.service;
 
 
-import com.hameed.springboot.pharmacyms.entity.UnitOfMeasure;
+import com.hameed.springboot.pharmacyms.model.entity.UnitOfMeasure;
 
 import java.util.List;
 

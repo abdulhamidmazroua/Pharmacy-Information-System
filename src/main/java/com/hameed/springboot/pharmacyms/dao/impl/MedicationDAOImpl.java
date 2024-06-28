@@ -1,7 +1,7 @@
 package com.hameed.springboot.pharmacyms.dao.impl;
 
 import com.hameed.springboot.pharmacyms.dao.MedicationDAO;
-import com.hameed.springboot.pharmacyms.entity.Medication;
+import com.hameed.springboot.pharmacyms.model.entity.Medication;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.hameed.springboot.pharmacyms.dao;
 
-import com.hameed.springboot.pharmacyms.entity.Sale;
-import com.hameed.springboot.pharmacyms.entity.UnitOfMeasure;
+import com.hameed.springboot.pharmacyms.model.entity.UnitOfMeasure;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.hameed.springboot.pharmacyms.entity;
+package com.hameed.springboot.pharmacyms.model.entity;
 
 import jakarta.persistence.*;
 
@@ -71,7 +71,5 @@ public abstract class AbstractEntity implements Serializable {
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
-
-    public abstract String toString();
 
 }

@@ -1,7 +1,7 @@
 package com.hameed.springboot.pharmacyms.dao.impl;
 
 import com.hameed.springboot.pharmacyms.dao.UnitOfMeasureDAO;
-import com.hameed.springboot.pharmacyms.entity.UnitOfMeasure;
+import com.hameed.springboot.pharmacyms.model.entity.UnitOfMeasure;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;

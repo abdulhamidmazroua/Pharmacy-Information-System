@@ -1,10 +1,11 @@
 package com.hameed.springboot.pharmacyms.service.impl;
 
 import com.hameed.springboot.pharmacyms.dao.MedicationDAO;
-import com.hameed.springboot.pharmacyms.entity.Medication;
+import com.hameed.springboot.pharmacyms.model.entity.Medication;
 import com.hameed.springboot.pharmacyms.service.MedicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,18 +30,21 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
+    @Transactional
     public Medication createMedication(Medication medication) {
         medicationDAO.save(medication);
         return medication;
     }
 
     @Override
+    @Transactional
     public Medication updateMedication(Medication medication) {
         medicationDAO.save(medication);
         return medication;
     }
 
     @Override
+    @Transactional
     public void deleteMedication(Long id) {
         medicationDAO.deleteById(id);
     }

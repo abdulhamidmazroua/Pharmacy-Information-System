@@ -1,4 +1,4 @@
-package com.hameed.springboot.pharmacyms.entity;
+package com.hameed.springboot.pharmacyms.model.entity;
 
 import jakarta.persistence.*;
 
@@ -20,7 +20,7 @@ public class Medication extends AbstractEntity implements Serializable {
 
     // references primary unit of measure
     @ManyToOne
-    @JoinColumn(name = "primary_uom_code")
+    @JoinColumn(name = "primary_uom_code", referencedColumnName = "code")
     private UnitOfMeasure primaryUom;
 
     // references category many to many
@@ -122,19 +122,5 @@ public class Medication extends AbstractEntity implements Serializable {
 
     public void setDosageStrength(Integer dosageStrength) {
         this.dosageStrength = dosageStrength;
-    }
-
-    @Override
-    public String toString() {
-        return "Medication{" +
-                "medicationName='" + medicationName + '\'' +
-                ", description='" + description + '\'' +
-                ", primaryUom=" + primaryUom +
-                ", categories=" + categories +
-                ", expDate=" + expDate +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", dosageStrength=" + dosageStrength +
-                '}';
     }
 }

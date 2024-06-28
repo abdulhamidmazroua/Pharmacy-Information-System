@@ -1,6 +1,6 @@
 package com.hameed.springboot.pharmacyms.dao;
 
-import com.hameed.springboot.pharmacyms.entity.Medication;
+import com.hameed.springboot.pharmacyms.model.entity.Medication;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.hameed.springboot.pharmacyms.service;
 
-import com.hameed.springboot.pharmacyms.entity.Sale;
+import com.hameed.springboot.pharmacyms.model.entity.Sale;
 
 import java.util.List;
 

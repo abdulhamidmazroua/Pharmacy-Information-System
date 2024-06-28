@@ -182,29 +182,48 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form th:action="@{/medications/add}" th:object="${medication}" method="post">
                     <div class="mb-3">
                         <label for="medicationName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="medicationName">
+                        <input type="text" class="form-control" id="medicationName" th:field="*{medicationName}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" th:field="*{description}">
                     </div>
                     <div class="mb-3">
                         <label for="medicationCategory" class="form-label">Category</label>
-                        <select class="form-control" id="medicationCategory">
-                            <option value="category1">Category 1</option>
-                            <option value="category2">Category 2</option>
+                        <select class="form-control" id="medicationCategory" th:field="*{categories}" multiple>
+                            <option th:each="tempCategory : ${categories}"
+                                    th:value="${tempCategory.id}"
+                                    th:text="${tempCategory.getCategoryCode()}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="medicationCategory" class="form-label">Unit of Measure</label>
+                        <select class="form-control" id="primaryUom" th:field="*{primaryUom}">
+                            <option th:each="tempUom : ${unitOfMeasures}"
+                                    th:value="${tempUom.id}"
+                                    th:text="${tempUom.getFullName()}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="medicationDosage" class="form-label">Dosage Strength</label>
-                        <input type="text" class="form-control" id="medicationDosage">
+                        <input type="number" class="form-control" id="medicationDosage" th:field="*{dosageStrength}">
                     </div>
+
                     <div class="mb-3">
                         <label for="medicationExpiration" class="form-label">Expiration Date</label>
-                        <input type="date" class="form-control" id="medicationExpiration">
+                        <input type="date" class="form-control" id="medicationExpiration" th:field="*{expDate}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicationQuantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="medicationQuantity" th:field="*{quantity}">
                     </div>
                     <div class="mb-3">
                         <label for="medicationPrice" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="medicationPrice">
+                        <input type="number" class="form-control" id="medicationPrice" th:field="*{price}">
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>

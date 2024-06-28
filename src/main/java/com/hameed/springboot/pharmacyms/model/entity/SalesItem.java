@@ -1,4 +1,4 @@
-package com.hameed.springboot.pharmacyms.entity;
+package com.hameed.springboot.pharmacyms.model.entity;
 
 import jakarta.persistence.*;
 
@@ -76,13 +76,4 @@ public class SalesItem extends AbstractEntity implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    @Override
-    public String toString() {
-        return "SaleItem{" +
-                "sale=" + sale +
-                ", medication=" + medication +
-                ", quantity=" + quantity +
-                ", unitPrice=" + unitPrice +
-                '}';
-    }
 }

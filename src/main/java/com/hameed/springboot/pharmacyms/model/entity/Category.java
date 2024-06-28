@@ -1,4 +1,4 @@
-package com.hameed.springboot.pharmacyms.entity;
+package com.hameed.springboot.pharmacyms.model.entity;
 
 import jakarta.persistence.*;
 
@@ -97,15 +97,4 @@ public class Category extends AbstractEntity implements Serializable  {
         this.medications = medications;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "categoryCode='" + categoryCode + '\'' +
-                ", categoryName='" + categoryName + '\'' +
-                ", categoryDescription='" + categoryDescription + '\'' +
-                ", superCategory=" + superCategory +
-                ", subCategories=" + subCategories +
-                ", medications=" + medications +
-                '}';
-    }
 }

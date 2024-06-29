@@ -32,14 +32,15 @@ public class Category extends AbstractEntity implements Serializable  {
     @OneToMany(mappedBy = "superCategory")
     private List<Category> subCategories;
 
-    // many-to-many relation with medication
-    @ManyToMany(mappedBy = "categories")
-    private Set<Medication> medications;
+    // one-to-many relation with medication
+    @OneToMany(mappedBy = "category")
+    private List<Medication> medications;
+
 
     public Category() {
     }
 
-    public Category(String createdBy, String lastUpdateBy, String categoryCode, String categoryName, String categoryDescription, Category superCategory, List<Category> subCategories, Set<Medication> medications) {
+    public Category(String createdBy, String lastUpdateBy, String categoryCode, String categoryName, String categoryDescription, Category superCategory, List<Category> subCategories, List<Medication> medications) {
         super(createdBy, lastUpdateBy);
         this.categoryCode = categoryCode;
         this.categoryName = categoryName;
@@ -89,12 +90,11 @@ public class Category extends AbstractEntity implements Serializable  {
         this.subCategories = subCategories;
     }
 
-    public Set<Medication> getMedications() {
+    public List<Medication> getMedications() {
         return medications;
     }
 
-    public void setMedications(Set<Medication> medications) {
+    public void setMedications(List<Medication> medications) {
         this.medications = medications;
     }
-
 }

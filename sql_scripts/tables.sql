@@ -61,11 +61,13 @@ CREATE TABLE MEDICATION (
                             name VARCHAR(255) NOT NULL,
                             description TEXT,
                             primary_uom_code VARCHAR(10),
+                            category_code VARCHAR(10),
                             exp_date DATE,
                             price DOUBLE NOT NULL,
                             quantity INT NOT NULL,
                             dosage_strength INT,
                             FOREIGN KEY (primary_uom_code) REFERENCES UNIT_OF_MEASURES(code),
+                            FOREIGN KEY (category_code) REFERENCES CATEGORY(code),
                             creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                             created_by VARCHAR(50),
                             last_update_by VARCHAR(50),
@@ -98,15 +100,6 @@ CREATE TABLE SALES_ITEM (
                             created_by VARCHAR(50),
                             last_update_by VARCHAR(50),
                             last_update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Create MEDICATIONS_CATEGORIES table
-CREATE TABLE MEDICATIONS_CATEGORIES (
-                                        medication_id BIGINT NOT NULL,
-                                        category_id BIGINT NOT NULL,
-                                        PRIMARY KEY (medication_id, category_id),
-                                        FOREIGN KEY (medication_id) REFERENCES MEDICATION(id),
-                                        FOREIGN KEY (category_id) REFERENCES CATEGORY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Some Dummy insertions

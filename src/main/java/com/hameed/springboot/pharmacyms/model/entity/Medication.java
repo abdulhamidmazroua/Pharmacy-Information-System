@@ -23,15 +23,10 @@ public class Medication extends AbstractEntity implements Serializable {
     @JoinColumn(name = "primary_uom_code", referencedColumnName = "code")
     private UnitOfMeasure primaryUom;
 
-    // references category many to many
-    @ManyToMany
-    @JoinTable(
-            name = "MEDICATIONS_CATEGORIES",
-            joinColumns = {@JoinColumn(name = "medication_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")}
-    )
-    private Set<Category> categories;
-
+    // many-to-one relation with category
+    @ManyToOne
+    @JoinColumn(name = "category_code")
+    private Category category;
 
     @Column(name = "exp_date")
     private Date expDate;
@@ -48,12 +43,12 @@ public class Medication extends AbstractEntity implements Serializable {
     public Medication() {
     }
 
-    public Medication(String createdBy, String lastUpdateBy, String description, String medicationName, UnitOfMeasure primaryUom, Set<Category> categories, Date expDate, Double price, Integer quantity, Integer dosageStrength) {
+    public Medication(String createdBy, String lastUpdateBy, String description, String medicationName, UnitOfMeasure primaryUom, Category category, Date expDate, Double price, Integer quantity, Integer dosageStrength) {
         super(createdBy, lastUpdateBy);
         this.description = description;
         this.medicationName = medicationName;
         this.primaryUom = primaryUom;
-        this.categories = categories;
+        this.category = category;
         this.expDate = expDate;
         this.price = price;
         this.quantity = quantity;
@@ -84,12 +79,12 @@ public class Medication extends AbstractEntity implements Serializable {
         this.primaryUom = primaryUom;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Date getExpDate() {

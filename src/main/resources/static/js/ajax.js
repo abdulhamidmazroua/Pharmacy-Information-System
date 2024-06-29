@@ -11,7 +11,7 @@ const createRequest = function (url) {
             const mainContent = document.getElementById('main-content');
             if (mainContent) {
                 mainContent.innerHTML = httpRequest.response;
-                history.pushState(null, '', url.replace('/content', ''));
+                history.pushState(null, '', url);
             } else {
                 console.error('Element with id "main-content" not found.');
             }
@@ -25,14 +25,14 @@ const createRequest = function (url) {
 
 // Load Initial Content Based on URL
 document.addEventListener('DOMContentLoaded', function() {
-    const url = window.location.href.replace(baseUrl, baseUrl+'/content');
+    const url = window.location.href;
     createRequest(url);
 });
 
 
 // Handling backward and forward buttons in browser
 window.addEventListener('popstate', function(event) {
-    const url = window.location.href.replace(baseUrl, baseUrl+'/content');
+    const url = window.location.href;
     createRequest(url);
 });
 
@@ -46,7 +46,7 @@ navLinks.forEach(link => {
         event.preventDefault();
         // Get the href attribute of the clicked link
         const href = this.getAttribute('href');
-        const url = baseUrl + '/content' + href;
+        const url = baseUrl + href;
         console.log(url);
         createRequest(url);
     });
@@ -58,7 +58,7 @@ const newSaleBtn = document.getElementById('new-sale-btn');
 newSaleBtn.addEventListener('click', function(event) {
     event.preventDefault();
     const href = this.getAttribute('href');
-    const url = baseUrl + '/content' + href;
+    const url = baseUrl + href;
     console.log(url);
     createRequest(url);
 });
@@ -69,7 +69,7 @@ saleLinks.forEach(link => {
     link.addEventListener('click', function(event) {
         event.preventDefault();
         const href = this.getAttribute('href');
-        const url = baseUrl + '/content' + href;
+        const url = baseUrl + href;
         console.log(url);
         createRequest(url);
     });

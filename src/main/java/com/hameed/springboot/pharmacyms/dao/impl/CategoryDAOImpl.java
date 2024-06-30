@@ -21,7 +21,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public void save(Category cat) {
-        entityManager.persist(cat);
+        entityManager.merge(cat);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public Category findByCode(String code) {
-        TypedQuery<Category> query = entityManager.createQuery("SELECT c FROM Category c WHERE c.code = :code", Category.class);
+        TypedQuery<Category> query = entityManager.createQuery("SELECT c FROM Category c WHERE c.categoryCode = :code", Category.class);
         query.setParameter("code", code);
         return query.getSingleResult();
     }

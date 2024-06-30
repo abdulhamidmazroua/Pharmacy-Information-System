@@ -21,7 +21,7 @@ public class MedicationDAOImpl implements MedicationDAO {
 
     @Override
     public void save(Medication m) {
-        entityManager.persist(m);
+        entityManager.merge(m);
     }
 
     @Override

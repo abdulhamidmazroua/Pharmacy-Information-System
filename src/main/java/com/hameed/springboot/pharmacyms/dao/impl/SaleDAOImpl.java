@@ -20,7 +20,7 @@ public class SaleDAOImpl implements SaleDAO {
 
     @Override
     public void save(Sale s) {
-        entityManager.persist(s);
+        entityManager.merge(s);
     }
 
     @Override

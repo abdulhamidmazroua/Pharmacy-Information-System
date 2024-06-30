@@ -21,7 +21,7 @@ public class SalesItemDAOImpl implements SalesItemDAO {
 
     @Override
     public void save(SalesItem s) {
-        entityManager.persist(s);
+        entityManager.merge(s);
     }
 
     @Override

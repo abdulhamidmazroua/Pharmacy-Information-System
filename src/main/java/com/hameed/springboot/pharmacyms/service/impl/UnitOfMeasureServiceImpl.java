@@ -29,6 +29,11 @@ public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
     }
 
     @Override
+    public UnitOfMeasure getUnitOfMeasureByCode(String code) {
+        return unitOfMeasureDAO.findByCode(code);
+    }
+
+    @Override
     public List<UnitOfMeasure> getAllUnitsOfMeasures() {
         return unitOfMeasureDAO.findAll();
     }

@@ -1,7 +1,7 @@
 package com.hameed.springboot.pharmacyms.util;
 
-import com.hameed.springboot.pharmacyms.dao.UnitOfMeasureDAO;
 import com.hameed.springboot.pharmacyms.model.entity.UnitOfMeasure;
+import com.hameed.springboot.pharmacyms.service.UnitOfMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -9,16 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class StringToUnitOfMeasureConverter implements Converter<String, UnitOfMeasure> {
 
-    private UnitOfMeasureDAO unitOfMeasureDAO;
+    private final UnitOfMeasureService unitOfMeasureService;
 
     @Autowired
-    public StringToUnitOfMeasureConverter(UnitOfMeasureDAO unitOfMeasureDAO) {
-        this.unitOfMeasureDAO = unitOfMeasureDAO;
+    public StringToUnitOfMeasureConverter(UnitOfMeasureService unitOfMeasureService) {
+        this.unitOfMeasureService = unitOfMeasureService;
     }
 
     @Override
     public UnitOfMeasure convert(String source) {
-        Long unitOfMeasureId = Long.valueOf(source);
-        return unitOfMeasureDAO.findById(unitOfMeasureId);
+        return unitOfMeasureService.getUnitOfMeasureByCode(source);
     }
 }

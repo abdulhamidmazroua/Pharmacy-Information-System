@@ -5,20 +5,16 @@ import com.hameed.springboot.pharmacyms.service.CategoryService;
 import com.hameed.springboot.pharmacyms.service.MedicationService;
 import com.hameed.springboot.pharmacyms.service.UnitOfMeasureService;
 import com.hameed.springboot.pharmacyms.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
+
 
 @Controller
 @RequestMapping("/medications")
@@ -51,8 +47,6 @@ public class MedicationsController {
         dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
 
-
-
     @GetMapping
     public String showAllMedications(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
         model.addAttribute("medication", new Medication());
@@ -70,7 +64,7 @@ public class MedicationsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
         }
         medicationService.createMedication(medication);
-        return "/fragments/medications-frag";
+        return "redirect:/medications";
     }
 
     @PostMapping("/update")
@@ -79,7 +73,7 @@ public class MedicationsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
         }
         medicationService.updateMedication(medication);
-        return "/fragments/medications-frag";
+        return "redirect:/medications";
     }
 
     @PostMapping("/{id}")
@@ -88,7 +82,7 @@ public class MedicationsController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
         }
         medicationService.deleteMedication(id);
-        return "/fragments/medications-frag";
+        return "redirect:/medications";
     }
 
 }

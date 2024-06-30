@@ -35,10 +35,10 @@ CREATE TABLE UNIT_OF_MEASURES (
                                   id BIGINT PRIMARY KEY AUTO_INCREMENT,
                                   code VARCHAR(10) NOT NULL UNIQUE,
                                   full_name VARCHAR(255) NOT NULL,
-                                  creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                  creation_date timestamp DEFAULT current_timestamp,
                                   created_by VARCHAR(50),
                                   last_update_by VARCHAR(50),
-                                  last_update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                                  last_update_date timestamp DEFAULT current_timestamp ON UPDATE current_timestamp
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Create CATEGORY table

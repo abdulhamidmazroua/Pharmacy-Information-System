@@ -25,7 +25,7 @@ public class Medication extends AbstractEntity implements Serializable {
 
     // many-to-one relation with category
     @ManyToOne
-    @JoinColumn(name = "category_code")
+    @JoinColumn(name = "category_code", referencedColumnName = "code")
     private Category category;
 
     @Column(name = "exp_date")

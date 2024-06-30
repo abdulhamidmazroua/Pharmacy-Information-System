@@ -21,7 +21,7 @@ public class UnitOfMeasureDAOImpl implements UnitOfMeasureDAO {
 
     @Override
     public void save(UnitOfMeasure uom) {
-        entityManager.persist(uom);
+        entityManager.merge(uom);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class UnitOfMeasureDAOImpl implements UnitOfMeasureDAO {
 
     @Override
     public UnitOfMeasure findByCode(String code) {
-        TypedQuery<UnitOfMeasure> query = entityManager.createQuery("SELECT c FROM UnitOfMeasure c WHERE c.code = :code", UnitOfMeasure.class);
+        TypedQuery<UnitOfMeasure> query = entityManager.createQuery("SELECT c FROM UnitOfMeasure c WHERE c.uomCode = :code", UnitOfMeasure.class);
         query.setParameter("code", code);
         return query.getSingleResult();
     }

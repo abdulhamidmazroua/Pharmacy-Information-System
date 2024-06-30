@@ -13,7 +13,6 @@ public class Category extends AbstractEntity implements Serializable  {
     private static final long serialVersionUID = 1L;
 
 
-
     @Column(name = "code")
     private String categoryCode;
 

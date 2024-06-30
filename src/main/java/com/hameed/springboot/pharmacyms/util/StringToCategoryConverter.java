@@ -1,7 +1,7 @@
 package com.hameed.springboot.pharmacyms.util;
 
-import com.hameed.springboot.pharmacyms.dao.CategoryDAO;
 import com.hameed.springboot.pharmacyms.model.entity.Category;
+import com.hameed.springboot.pharmacyms.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -9,17 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class StringToCategoryConverter implements Converter<String, Category> {
 
-    private CategoryDAO categoryDAO;
+    private final CategoryService categoryService;
 
     @Autowired
-    public StringToCategoryConverter(CategoryDAO categoryDAO) {
-        this.categoryDAO = categoryDAO;
+    public StringToCategoryConverter(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @Override
     public Category convert(String source) {
-        Long categoryId = Long.valueOf(source);
-
-        return categoryDAO.findById(categoryId);
+        return categoryService.getCategoryByCode(source);
     }
 }

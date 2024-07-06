@@ -10,11 +10,15 @@
     <link rel="stylesheet" type="text/css" href="/pharmacy-ms/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/pharmacy-ms/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/pharmacy-ms/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/pharmacy-ms/css/new-sale.css">
+    <link rel="stylesheet" type="text/css" href="/pharmacy-ms/css/sales.css">
 </head>
 <body>
 
     <div th:replace="/fragments/header :: header"></div>
-    <div id="main-content"><div th:replace="${fragment}"></div></div>
+    <div id="main-content" th:data-id="${fragment_id}">
+        <div th:replace="${fragment}"></div>
+    </div>
     <div th:replace="/fragments/footer :: footer"></div>
 
 

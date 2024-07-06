@@ -54,6 +54,7 @@ public class MedicationsController {
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("unitOfMeasures", unitOfMeasureService.getAllUnitsOfMeasures());
         model.addAttribute("fragment", "/fragments/medications-frag");
+        model.addAttribute("fragment_id", "medications-frag");
 
         return "XMLHttpRequest".equals(requestedWith) ? "/fragments/medications-frag" : "layout";
     }

@@ -1,122 +1,102 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Sales</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .sales-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+<!-- Fragment Content (Sales) -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="sales">
+    <div class="container mt-5 mb-5">
+        <div class="sales-header">
+            <h1 class="h3">Sales</h1>
+            <a href="sales/new-sale" class="btn btn-primary" id="new-sale-btn">New Sale</a>
+        </div>
 
-        .sales-table {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-<div class="container mt-5 mb-5">
-    <div class="sales-header">
-        <h1 class="h3">Sales</h1>
-        <a href="sales/new-sale" class="btn btn-primary" id="new-sale-btn">New Sale</a>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Search by Customer">
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" placeholder="Date From">
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" placeholder="Date To">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-secondary w-100">Apply Filters</button>
+            </div>
+        </div>
+
+        <table class="table table-hover sales-table">
+            <thead class="table-light">
+            <tr>
+                <th>Sale ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="#" class="sale-id-link" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">001</a></td>
+                <td>John Doe</td>
+                <td>2024-06-22</td>
+                <td>$100.00</td>
+                <td>
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">Details
+                    </button>
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </td>
+            </tr>
+            <!-- More rows as needed -->
+            </tbody>
+        </table>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Search by Customer">
-        </div>
-        <div class="col-md-3">
-            <input type="date" class="form-control" placeholder="Date From">
-        </div>
-        <div class="col-md-3">
-            <input type="date" class="form-control" placeholder="Date To">
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-secondary w-100">Apply Filters</button>
-        </div>
-    </div>
-
-    <table class="table table-hover sales-table">
-        <thead class="table-light">
-        <tr>
-            <th>Sale ID</th>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>Total Amount</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><a href="#" class="sale-id-link" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">001</a></td>
-            <td>John Doe</td>
-            <td>2024-06-22</td>
-            <td>$100.00</td>
-            <td>
-                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">Details
-                </button>
-                <button class="btn btn-danger btn-sm">Delete</button>
-            </td>
-        </tr>
-        <!-- More rows as needed -->
-        </tbody>
-    </table>
-</div>
-
-<!-- Sale Details Modal -->
-<div class="modal fade" id="saleDetailsModal" tabindex="-1" aria-labelledby="saleDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="saleDetailsModalLabel">Sale Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Sale header and lines will be populated here -->
-                <div class="sale-header">
-                    <p><strong>Sale ID:</strong> 001</p>
-                    <p><strong>Customer:</strong> John Doe</p>
-                    <p><strong>Date:</strong> 2024-06-22</p>
-                    <p><strong>Total Amount:</strong> $100.00</p>
+    <!-- Sale Details Modal -->
+    <div class="modal fade" id="saleDetailsModal" tabindex="-1" aria-labelledby="saleDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saleDetailsModalLabel">Sale Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <hr>
-                <div class="sale-lines">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Item 1</td>
-                            <td>2</td>
-                            <td>$20.00</td>
-                            <td>$40.00</td>
-                        </tr>
-                        <tr>
-                            <td>Item 2</td>
-                            <td>1</td>
-                            <td>$60.00</td>
-                            <td>$60.00</td>
-                        </tr>
-                        <!-- More items as needed -->
-                        </tbody>
-                    </table>
+                <div class="modal-body">
+                    <!-- Sale header and lines will be populated here -->
+                    <div class="sale-header">
+                        <p><strong>Sale ID:</strong> 001</p>
+                        <p><strong>Customer:</strong> John Doe</p>
+                        <p><strong>Date:</strong> 2024-06-22</p>
+                        <p><strong>Total Amount:</strong> $100.00</p>
+                    </div>
+                    <hr>
+                    <div class="sale-lines">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Item 1</td>
+                                <td>2</td>
+                                <td>$20.00</td>
+                                <td>$40.00</td>
+                            </tr>
+                            <tr>
+                                <td>Item 2</td>
+                                <td>1</td>
+                                <td>$60.00</td>
+                                <td>$60.00</td>
+                            </tr>
+                            <!-- More items as needed -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-</body>
-</html>

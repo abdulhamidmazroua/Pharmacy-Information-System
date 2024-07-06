@@ -1,58 +1,52 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Pharmacy MS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
 
-<!-- Body Content (Medications List) -->
-<div class="container mt-5 mb-5">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h2>Medications</h2>
-        </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-success float-md-end" id="add-medication" >Add Medication
-            </button>
-        </div>
-    </div>
 
-    <div class="row mb-3" id="medication-search">
-        <div class="col-md-4">
-            <input type="text" class="form-control" name="medication-name" placeholder="Search by name">
+<!-- Fragment Content (Medications List) -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="medications">
+    <div class="container mt-5 mb-5">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2>Medications</h2>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-success float-md-end" id="add-medication" >Add Medication
+                </button>
+            </div>
         </div>
-        <div class="col-md-4">
-            <select class="form-control" name="category">
-                <option value="">Filter by category</option>
-                <option th:each="tempCategory : ${categories}" th:value="${tempCategory.categoryCode}"
-                        th:text="${tempCategory.categoryName}"></option>
-            </select>
-        </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-primary">Search</button>
-        </div>
-    </div>
 
-    <table class="table table-striped table-bordered" id="medication-table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Dosage Strength</th>
-            <th>Expiration Date</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="tempMedication : ${medications}">
-            <td><a class="med-link"
-                   href="#"
-                   th:text="${tempMedication.medicationName}"
-                   th:attr="
+        <div class="row mb-3" id="medication-search">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="medication-name" placeholder="Search by name">
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" name="category">
+                    <option value="">Filter by category</option>
+                    <option th:each="tempCategory : ${categories}" th:value="${tempCategory.categoryCode}"
+                            th:text="${tempCategory.categoryName}"></option>
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-primary">Search</button>
+            </div>
+        </div>
+
+        <table class="table table-striped table-bordered" id="medication-table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Dosage Strength</th>
+                <th>Expiration Date</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tempMedication : ${medications}">
+                <td><a class="med-link"
+                       href="#"
+                       th:text="${tempMedication.medicationName}"
+                       th:attr="
                     data-id=${tempMedication.id},
                     data-creationDate=${#dates.format(tempMedication.creationDate, 'yyyy-MM-dd')},
                     data-createdBy=${tempMedication.createdBy},
@@ -66,83 +60,80 @@
                     data-quantity=${tempMedication.quantity},
                     data-price=${tempMedication.price},
                     data-category=${tempMedication.category.categoryCode}"></a></td>
-            <td th:text="${tempMedication.category.categoryName}"></td>
-            <td th:text="${tempMedication.dosageStrength} + ' ' + ${tempMedication.primaryUom.uomCode}"></td>
-            <td th:text="${#dates.format(tempMedication.expDate, 'yyyy-MM-dd')}"></td>
-            <td th:text="${tempMedication.quantity}"></td>
-            <td th:text="${tempMedication.price}"></td>
-            <td>
-                <button id="delete-button" th:data-id="${tempMedication.id}" class="btn btn-danger btn-sm">Delete</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+                <td th:text="${tempMedication.category.categoryName}"></td>
+                <td th:text="${tempMedication.dosageStrength} + ' ' + ${tempMedication.primaryUom.uomCode}"></td>
+                <td th:text="${#dates.format(tempMedication.expDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${tempMedication.quantity}"></td>
+                <td th:text="${tempMedication.price}"></td>
+                <td>
+                    <button th:data-id="${tempMedication.id}" class="delete-medication btn btn-danger btn-sm">Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-<!-- Medication Modal -->
-<div class="modal fade" id="medicationModal" tabindex="-1" aria-labelledby="medicationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="medicationModalLabel">Medication Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="medicationForm" th:object="${medication}">
-                    <input type="hidden" id="medicationId" th:field="*{id}" />
-                    <input type="hidden" id="creationDate" th:field="*{creationDate}" />
-                    <input type="hidden" id="createdBy" th:field="*{createdBy}" />
-                    <input type="hidden" id="lastUpdateDate" th:field="*{lastUpdateDate}" />
-                    <input type="hidden" id="lastUpdateBy" th:field="*{lastUpdateBy}" />
-                    <div class="mb-3">
-                        <label for="medicationName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="medicationName" th:field="*{medicationName}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" th:field="*{description}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="medicationCategory" class="form-label">Category</label>
-                        <select class="form-control" id="medicationCategory" th:field="*{category}">
-                            <option th:each="tempCategory : ${categories}"
-                                    th:value="${tempCategory.categoryCode}"
-                                    th:text="${tempCategory.categoryName}"></option>
-                        </select>
-                    </div>
+    <!-- Medication Modal -->
+    <div class="modal fade" id="medicationModal" tabindex="-1" aria-labelledby="medicationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicationModalLabel">Medication Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="medicationForm" th:object="${medication}">
+                        <input type="hidden" id="medicationId" th:field="*{id}" />
+                        <input type="hidden" id="creationDate" th:field="*{creationDate}" />
+                        <input type="hidden" id="createdBy" th:field="*{createdBy}" />
+                        <input type="hidden" id="lastUpdateDate" th:field="*{lastUpdateDate}" />
+                        <input type="hidden" id="lastUpdateBy" th:field="*{lastUpdateBy}" />
+                        <div class="mb-3">
+                            <label for="medicationName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="medicationName" th:field="*{medicationName}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" th:field="*{description}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="medicationCategory" class="form-label">Category</label>
+                            <select class="form-control" id="medicationCategory" th:field="*{category}">
+                                <option th:each="tempCategory : ${categories}"
+                                        th:value="${tempCategory.categoryCode}"
+                                        th:text="${tempCategory.categoryName}"></option>
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="primaryUom" class="form-label">Unit of Measure</label>
-                        <select class="form-control" id="primaryUom" th:field="*{primaryUom}">
-                            <option th:each="tempUom : ${unitOfMeasures}"
-                                    th:value="${tempUom.uomCode}"
-                                    th:text="${tempUom.fullName}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="medicationDosage" class="form-label">Dosage Strength</label>
-                        <input type="number" class="form-control" id="medicationDosage" th:field="*{dosageStrength}">
-                    </div>
+                        <div class="mb-3">
+                            <label for="primaryUom" class="form-label">Unit of Measure</label>
+                            <select class="form-control" id="primaryUom" th:field="*{primaryUom}">
+                                <option th:each="tempUom : ${unitOfMeasures}"
+                                        th:value="${tempUom.uomCode}"
+                                        th:text="${tempUom.fullName}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="medicationDosage" class="form-label">Dosage Strength</label>
+                            <input type="number" class="form-control" id="medicationDosage" th:field="*{dosageStrength}">
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="medicationExpiration" class="form-label">Expiration Date</label>
-                        <input type="date" class="form-control" id="medicationExpiration" th:field="*{expDate}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="medicationQuantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="medicationQuantity" th:field="*{quantity}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="medicationPrice" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="medicationPrice" th:field="*{price}">
-                    </div>
-                    <button type="button" id="save-medication" class="btn btn-primary">Save Changes</button>
-                </form>
+                        <div class="mb-3">
+                            <label for="medicationExpiration" class="form-label">Expiration Date</label>
+                            <input type="date" class="form-control" id="medicationExpiration" th:field="*{expDate}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="medicationQuantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="medicationQuantity" th:field="*{quantity}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="medicationPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="medicationPrice" th:field="*{price}">
+                        </div>
+                        <button type="button" id="save-medication" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-</body>
-</html>

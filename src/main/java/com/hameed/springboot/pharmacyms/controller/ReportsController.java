@@ -13,6 +13,7 @@ public class ReportsController {
     @GetMapping
     public String showReports(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
         model.addAttribute("fragment", "/fragments/reports-frag");
+        model.addAttribute("fragment_id", "reports-frag");
         return "XMLHttpRequest".equals(requestedWith) ? "/fragments/reports-frag" : "layout";
     }
 }

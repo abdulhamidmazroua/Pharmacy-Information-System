@@ -13,32 +13,54 @@ class ModalManager {
         this.baseUrl = baseUrl;
         this.modalInstance = new bootstrap.Modal(this.modalElement);
 
-        this.init();
+        this.buttonHandler = null;
+        this.showHandler = null;
+        this.hideHandler = null;
+
+        // this.init();
     }
 
-    init() {
-        this.modalElement.addEventListener('shown.bs.modal', () => {
-            this.saveButtonElement.addEventListener('click', (event) => this.handleSave(event));
-        });
+    attachEventListeners(buttonHandler, showHandler, hideHandler) {
+        this.buttonHandler = buttonHandler;
+        this.showHandler = showHandler;
+        this.hideHandler = hideHandler;
+        modalManager.modalElement.addEventListener('shown.bs.modal', showHandler);
+        modalManager.modalElement.addEventListener('hidden.bs.modal', hideHandler);
     }
 
-    handleSave(event) {
+    handleSave(event, targetElementId, successCallback) {
         event.preventDefault();
         const href = this.formElement.href;
         const url = this.baseUrl + '/' + href;
         const formData = new FormData(this.formElement);
         const params = new URLSearchParams(formData);
-
-        createRequest(url, 'POST', params.toString(), this.cleanup, 'medication-table');
+        createRequest(url, 'POST', params, targetElementId, () => {
+            this.modalInstance.hide();
+        });
     }
 
     cleanUp() {
-        // remove the UI
-        this.modalInstance.hide();
-        this.modalInstance.dispose();
+        // reset the form
+        this.formElement.reset();
+        document.getElementById('medicationId').value = '';
+        document.getElementById('createdBy').value = '';
+        document.getElementById('lastUpdateBy').value = '';
+
         // Remove event listeners
-        this.saveButtonElement.removeEventListener('click', (event) => this.handleSave(event));
-        this.modalElement.removeEventListener('shown.bs.modal', this.showHandler);
+        if (this.buttonHandler) {
+            this.saveButtonElement.removeEventListener('click', this.buttonHandler);
+        }
+        if (this.showHandler) {
+            this.modalElement.removeEventListener('shown.bs.modal', this.showHandler);
+        }
+        if (this.hideHandler) {
+            this.modalElement.removeEventListener('hidden.bs.modal', this.hideHandler);
+        }
+
+        // Reset body scroll state
+        // document.body.classList.remove('modal-open');
+        // document.body.style.paddingRight = '';
+
 
         // Nullify instance to free up memory
         modalManager = null;
@@ -46,28 +68,39 @@ class ModalManager {
 }
 
 // Asynchronous request (ajax)
-const createRequest = function (url, method, params, successCallback, updateTargetId) {
+// successCallback:
+// is added to execute a function after the response is successfully returned
+// targetElementId:
+// 1- If the method == POST then it specifies the element that will be affected
+// in response to the data change (ex: table will be reloaded after add/update/delete)
+// 2- If the method == GET then it is null since it is not a partial update
+// and the whole fragment will be replaced
+function createRequest (url, method, params, targetElementId, successCallback) {
     const httpRequest = new XMLHttpRequest(url);
     httpRequest.addEventListener('readystatechange', (ajax_url) => {
-        if (httpRequest.readyState === 4
-            && httpRequest.status === 200) {
-            const target = document.getElementById(updateTargetId);
-            if (target) {
-                // Call the success callback
-                if (successCallback) {
-                    successCallback();
-                }
-                // Use DOMParser to parse the response and safely insert it into the DOM
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(httpRequest.responseText, 'text/html');
-                const newContent = 'main-content'.startsWith(updateTargetId) ? httpRequest.responseText : doc.getElementById(updateTargetId);
-
-                target.innerHTML = newContent.innerHTML;
-                if (method === 'GET') {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                let target;
+                let newContent;
+                // This is based on the assumption that
+                // only POST ajax requests will be for
+                // partial target update (like updating the table)
+                // otherwise (for GET requests), we will update the whole fragment
+                // by updating the main-content
+                if (method === 'POST') {
+                    const doc = new DOMParser().parseFromString(httpRequest.responseText, 'text/html');
+                    newContent = doc.getElementById(targetElementId);
+                    target = document.getElementById(targetElementId);
+                    target.innerHTML = newContent.innerHTML;
+                } else {
+                    newContent = httpRequest.responseText;
+                    target = document.getElementById('main-content');
+                    target.innerHTML = newContent;
                     history.pushState(null, '', url);
                 }
+                if (successCallback) successCallback();
             } else {
-                console.error('Element with target id not found.');
+                console.log('Ajax Request did not succeed, url: ' + url);
             }
         }
     });
@@ -84,169 +117,63 @@ const createRequest = function (url, method, params, successCallback, updateTarg
     httpRequest.send(params);
 }
 
-// Handling backward and forward buttons in browser
-window.addEventListener('popstate', function(event) {
-    const url = window.location.href;
-    createRequest(url, 'GET', null, null, 'main-content');
-});
+// Function to dynamically load and execute page-specific scripts
+// only if they are not already executed
 
 
-// Select all links in the navigation bar in the header fragment
-const navLinks = document.querySelectorAll('#navbarNav a');
-// Add an event listener to each link
-navLinks.forEach(link => {
-    link.addEventListener('click', function(event) {
-        // Prevent the default action
-        event.preventDefault();
-        // Get the href attribute of the clicked link
-        const href = this.getAttribute('href');
-        const url = baseUrl + '/' + href;
-        console.log(url);
-        createRequest(url, 'GET', null, null, 'main-content');
+function executePageSpecificScript(fragmentId) {
+    if ( fragmentId) {
+        const script = document.createElement('script');
+        script.src = `/pharmacy-ms/js/${fragmentId}.js`;
+        script.onload = () => {
+            // Clean up by removing the script tag after it has been executed
+            script.remove();
+        }
+        document.body.appendChild(script);
+        console.log(document);
+    }
+}
 
-    });
-});
 
-// Add Event listeners for any event inside the replaceable fragment
-// here we used event delegation to delegate to the parent div that
-// is holding the changing fragment
+// Main Layout Event Listeners
 document.addEventListener('DOMContentLoaded', function () {
-
-    // Use event delegation to listen for any click inside the dynamic changeable fragment
-    document.getElementById('main-content').addEventListener('click', function(event) {
-
-        // handling the click on any medication link
-        // opening the Medication Form Modal
-        // prepopulating data
-        if (event.target && event.target.classList.contains('med-link')) {
-            modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', baseUrl);
-            event.preventDefault();
-            populateMedicationForm(event.target, modalManager);
-        }
-
-        // add medication button action that shows An Empty Medication Form Modal
-        if (event.target && event.target.id === 'add-medication') {
-            modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', baseUrl);
-            event.preventDefault();
-            restMedicationModal(modalManager);
-        }
-
-        // delete medication button action in the medication table
-        if (event.target && event.target.id === 'delete-button'){
-            event.preventDefault();
-            console.log(event.target.id);
-            const href = event.target.getAttribute('href');
-            const url = baseUrl + '/medications/' + event.target.getAttribute('data-id')
-            createRequest(url, 'POST', null, null, 'medication-table')
-        }
-
-
-        // sales-fragment events
-
-
-        // new sale button for navigating to the new sale fragment
-        if (event.target && event.target.id === 'new-sale-btn') {
-            event.preventDefault();
-            const href = event.target.getAttribute('href');
-            const url = baseUrl + '/' + href;
-            console.log(url);
-            createRequest(url, 'GET', null, null, 'main-content');
-        }
-
-        // if (event.target && event.target.event.target.classList.contains('sale-id-link')) {
-        //     event.preventDefault();
-        //     const href = event.target.getAttribute('href');
-        //     const url = baseUrl + '/content' + href;
-        //     console.log(url);
-        //     createRequest(url);
-        // }
-
-
+    // Handling backward and forward buttons in browser
+    window.addEventListener('popstate', function(event) {
+        const url = window.location.href;
+        const targetElementId = window.location.pathname.replace('/pharmacy-ms/', '') + '-frag';
+        createRequest(url, 'GET', null, null, function () {
+            executePageSpecificScript(targetElementId); // here the targetElementId will be the new fragment id
+        });
     });
 
-});
-
-// Add Event listeners for real-time search in the dynamically changed fragment
-const medNameSearchInput = document.querySelector("input[name='medication-name']");
-const medCategorySelection = document.querySelector('#medication-search select[name="category"]');
-if (medNameSearchInput) {
-    medNameSearchInput.addEventListener('input', criteriaChangeHandler);
-}
-if (medCategorySelection) {
-    medCategorySelection.addEventListener('change', criteriaChangeHandler);
-}
-
-
-// helper functions
-function populateMedicationForm(link, modalManager) {
-    // Populate form fields for editing
-    document.getElementById('medicationModalLabel').innerText = 'Edit Medication';
-    document.getElementById('medicationForm').href = 'medications/update';
-    // hidden values
-    document.getElementById('medicationId').value = link.getAttribute('data-id') || '';
-    document.getElementById('creationDate').value = link.getAttribute('data-creationDate') || '';
-    document.getElementById('createdBy').value = link.getAttribute('data-createdBy') || '';
-    document.getElementById('lastUpdateDate').value = link.getAttribute('data-lastUpdateDate') || '';
-    document.getElementById('lastUpdateBy').value = link.getAttribute('data-lastUpdateBy') || '';
-
-
-    document.getElementById('medicationName').value = link.getAttribute('data-name') || '';
-    document.getElementById('description').value = link.getAttribute('data-description') || '';
-    document.getElementById('medicationDosage').value = link.getAttribute('data-dosageStrength') || '';
-    document.getElementById('medicationExpiration').value = link.getAttribute('data-expDate') || '';
-    document.getElementById('medicationQuantity').value = link.getAttribute('data-quantity') || '';
-    document.getElementById('medicationPrice').value = link.getAttribute('data-price') || '';
-
-    // handling selection elements (category, unitOfMeasure)
-    setSelectedValue(document.getElementById('medicationCategory'), link.getAttribute("data-category"));
-    setSelectedValue(document.getElementById('primaryUom'), link.getAttribute("data-primaryUom"));
-
-    modalManager.modalInstance.show();
-}
-
-function setSelectedValue(selectElement, value) {
-    for (let i = 0; i < selectElement.options.length; i++) {
-        if (selectElement.options[i].value === value) {
-            selectElement.options[i].selected = true;
-            break;
+    // Select all links in the navigation bar in the header fragment
+    const navLinks = document.querySelectorAll('#navbarNav a');
+    // Add an event listener to each link
+    if (navLinks) {
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    // Prevent the default action
+                    event.preventDefault();
+                    // Get the href attribute of the clicked link
+                    const href = this.getAttribute('href');
+                    const url = baseUrl + '/' + href;
+                    const targetFragmentId = href + '-frag';
+                    console.log(url);
+                    createRequest(url, 'GET', null, null, function () {
+                        executePageSpecificScript(targetFragmentId); // here the targetElementId will be the new fragment id
+                    });
+                });
+            });
         }
-    }
-}
 
-function restMedicationModal(modalManager) {
-    // Reset form fields for adding
-    document.getElementById('medicationModalLabel').innerText = 'Add Medication';
-    document.getElementById('medicationForm').href = 'medications/add';
-    document.getElementById('medicationForm').reset();
-    // prepare date fields
-    let date = new Date();
-    // Format the date as yyyy-MM-dd
-    let formattedDate = date.toISOString().split('T')[0];
+    // initial load script
+    const initialFragmentId = document.getElementById('main-content').getAttribute('data-id');
+    executePageSpecificScript(initialFragmentId);
+})
 
-    // Set the value of the hidden input to the formatted date
-    document.getElementById('creationDate').value = formattedDate;
-    document.getElementById('lastUpdateDate').value = formattedDate;
-    modalManager.modalInstance.show();
-}
 
-function criteriaChangeHandler() {
-    const name = document.querySelector("input[name='medication-name']").value.toLowerCase();
-    const categoryCode = document.querySelector('#medication-search select[name="category"]').value.toLowerCase();
-    searchMedications(name, categoryCode);
-}
 
-function searchMedications(name, categoryCode) {
-    const table = document.getElementById('medication-table');
-    const rows = table.getElementsByTagName('tr');
-    // start from 1 to skip the header row
-    for (let i = 1; i < rows.length; i++) {
-        const currentMedicationLink = rows[i].getElementsByTagName('td')[0].getElementsByTagName('a')[0];
-        const currentName = currentMedicationLink.getAttribute('data-name');
-        const currentCategory = currentMedicationLink.getAttribute('data-category');
-        if (!(currentName.toLowerCase().startsWith(name) && currentCategory.toLowerCase().startsWith(categoryCode))) {
-            rows[i].style.display = 'none';
-        } else {
-            rows[i].style.display = '';
-        }
-    }
-}
+
+
+
+

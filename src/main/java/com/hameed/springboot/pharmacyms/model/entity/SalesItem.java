@@ -1,5 +1,7 @@
 package com.hameed.springboot.pharmacyms.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -13,6 +15,7 @@ public class SalesItem extends AbstractEntity implements Serializable {
     // reference to sale header
     @ManyToOne
     @JoinColumn(name = "sales_id")
+    @JsonBackReference
     private Sale sale;
 
     // reference to medication

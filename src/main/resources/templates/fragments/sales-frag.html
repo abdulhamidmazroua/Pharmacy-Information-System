@@ -1,5 +1,5 @@
 <!-- Fragment Content (Sales) -->
-<div xmlns:th="http://www.thymeleaf.org" th:fragment="sales">
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="sales" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div class="container mt-5 mb-5">
         <div class="sales-header">
             <h1 class="h3">Sales</h1>
@@ -7,40 +7,57 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Search by Customer">
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="sale-id" placeholder="Sale Id">
             </div>
-            <div class="col-md-3">
-                <input type="date" class="form-control" placeholder="Date From">
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="customer-name" placeholder="Customer Name">
             </div>
-            <div class="col-md-3">
-                <input type="date" class="form-control" placeholder="Date To">
+            <div class="col-md-2">
+                <input type="datetime-local" class="form-control" name="date-from" placeholder="Date From">
             </div>
-            <div class="col-md-3">
-                <button class="btn btn-secondary w-100">Apply Filters</button>
+            <div class="col-md-2">
+                <input type="datetime-local" class="form-control" name="date-to" placeholder="Date To">
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control" name="greater-than" placeholder="Total Amount >=">
+            </div>
+            <div class="col-md-2">
+                <button id="reset-button" class="btn btn-secondary w-100">Reset</button>
             </div>
         </div>
 
-        <table class="table table-hover sales-table">
+        <table class="table table-hover sales-table" id="sales-table">
             <thead class="table-light">
             <tr>
                 <th>Sale ID</th>
                 <th>Customer</th>
-                <th>Date</th>
+                <th>Date Time</th>
                 <th>Total Amount</th>
-                <th>Actions</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td><a href="#" class="sale-id-link" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">001</a></td>
-                <td>John Doe</td>
-                <td>2024-06-22</td>
-                <td>$100.00</td>
-                <td>
-                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#saleDetailsModal">Details
-                    </button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
+            <tr th:each="tempSale : ${sales}">
+                <td><a href="#"
+                       class="sale-id-link"
+                        th:text="${'SALE-' + tempSale.id}"
+                        th:attr="
+                            data-id=${tempSale.id},
+                            data-creationDate=${#dates.format(tempSale.creationDate, 'yyyy-MM-dd''T''HH:mm')},
+                            data-createdBy=${tempSale.createdBy},
+                            data-lastUpdateDate=${#dates.format(tempSale.lastUpdateDate, 'yyyy-MM-dd''T''HH:mm')},
+                            data-lastUpdateBy=${tempSale.lastUpdateBy},
+                            data-customerName=${tempSale.customerName},
+                            data-totalAmount=${tempSale.totalAmount},
+                            data-salesItems=${jsonUtil.toJson(tempSale.salesItems)}">
+                    </a>
+                </td>
+                <td th:text="${tempSale.customerName}"></td>
+                <td th:text="${tempSale.creationDate}"></td>
+                <td th:text="${tempSale.totalAmount}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button id="delete-sale" class="btn btn-danger btn-sm" th:data-id="${tempSale.id}">Delete</button>
                 </td>
             </tr>
             <!-- More rows as needed -->
@@ -58,40 +75,74 @@
                 </div>
                 <div class="modal-body">
                     <!-- Sale header and lines will be populated here -->
-                    <div class="sale-header">
-                        <p><strong>Sale ID:</strong> 001</p>
-                        <p><strong>Customer:</strong> John Doe</p>
-                        <p><strong>Date:</strong> 2024-06-22</p>
-                        <p><strong>Total Amount:</strong> $100.00</p>
-                    </div>
-                    <hr>
-                    <div class="sale-lines">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Item 1</td>
-                                <td>2</td>
-                                <td>$20.00</td>
-                                <td>$40.00</td>
-                            </tr>
-                            <tr>
-                                <td>Item 2</td>
-                                <td>1</td>
-                                <td>$60.00</td>
-                                <td>$60.00</td>
-                            </tr>
-                            <!-- More items as needed -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <form id="salesForm">
+                        <div class="sale-header mb-3">
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="saleId" class="col-sm-4 col-form-label"><strong>Sale ID:</strong></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="saleId" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="customerName" class="col-sm-4 col-form-label"><strong>Customer:</strong></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="customerName" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="creationDate" class="col-sm-4 col-form-label"><strong>Date Time:</strong></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="creationDate" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="totalAmount" class="col-sm-4 col-form-label"><strong>Total Amount:</strong></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="totalAmount" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label for="createdBy" class="col-sm-4 col-form-label"><strong>Created By:</strong></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="createdBy" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" class="form-control" id="lastUpdateBy" readonly>
+                            <input type="hidden" class="form-control" id="lastUpdateDate" readonly>
+                        </div>
+                        <hr>
+                        <div class="sale-lines">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                                </thead>
+                                <tbody id="saleItemsTableBody">
+                                    <!-- Sale items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

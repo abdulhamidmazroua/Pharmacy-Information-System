@@ -5,6 +5,7 @@ import com.hameed.springboot.pharmacyms.model.entity.Sale;
 import com.hameed.springboot.pharmacyms.model.entity.SalesItem;
 import com.hameed.springboot.pharmacyms.service.SaleService;
 import com.hameed.springboot.pharmacyms.service.SalesItemService;
+import com.hameed.springboot.pharmacyms.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,13 @@ public class SalesController {
 
     private SalesItemService salesItemService;
 
+    private JsonUtil jsonUtil;
+
     @Autowired
-    public SalesController(SaleService saleService, SalesItemService salesItemService) {
+    public SalesController(SaleService saleService, SalesItemService salesItemService, JsonUtil jsonUtil) {
         this.saleService = saleService;
         this.salesItemService = salesItemService;
+        this.jsonUtil = jsonUtil;
     }
 
     @InitBinder
@@ -39,6 +43,7 @@ public class SalesController {
     public String showSales(Model model, @RequestHeader(value = "X-Requested-With", required = false) String requestedWith) {
 
         model.addAttribute("sales", saleService.getAllSales());
+        model.addAttribute("jsonUtil", jsonUtil);
 
         model.addAttribute("fragment", "/fragments/sales-frag");
         model.addAttribute("fragment_id", "sales-frag");

@@ -6,18 +6,17 @@ let baseUrl = window.location.origin + '/pharmacy-ms';
 let modalManager;
 
 class ModalManager {
-    constructor(modalId, saveButtonId, formId, baseUrl) {
+    constructor(modalId, saveButtonId, formId, entityId, baseUrl) {
         this.modalElement = document.getElementById(modalId);
         this.saveButtonElement = document.getElementById(saveButtonId);
         this.formElement = document.getElementById(formId);
+        this.entityId = entityId;
         this.baseUrl = baseUrl;
         this.modalInstance = new bootstrap.Modal(this.modalElement);
 
         this.buttonHandler = null;
         this.showHandler = null;
         this.hideHandler = null;
-
-        // this.init();
     }
 
     attachEventListeners(buttonHandler, showHandler, hideHandler) {
@@ -42,7 +41,7 @@ class ModalManager {
     cleanUp() {
         // reset the form
         this.formElement.reset();
-        document.getElementById('medicationId').value = '';
+        document.getElementById(this.entityId).value = '';
         document.getElementById('createdBy').value = '';
         document.getElementById('lastUpdateBy').value = '';
 

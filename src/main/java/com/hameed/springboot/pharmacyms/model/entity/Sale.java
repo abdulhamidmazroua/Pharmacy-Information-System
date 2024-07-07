@@ -1,5 +1,6 @@
 package com.hameed.springboot.pharmacyms.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,7 +18,8 @@ public class Sale extends AbstractEntity implements Serializable {
     @Column(name = "total_amount")
     private String totalAmount;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<SalesItem> salesItems;
 
     public Sale() {

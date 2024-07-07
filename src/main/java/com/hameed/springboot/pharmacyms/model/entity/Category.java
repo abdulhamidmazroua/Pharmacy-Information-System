@@ -1,5 +1,8 @@
 package com.hameed.springboot.pharmacyms.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonMerge;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -25,14 +28,17 @@ public class Category extends AbstractEntity implements Serializable  {
     // Self Join: referencing super category (target) as a child(owner of relation)
     @ManyToOne
     @JoinColumn(name = "super_category_code")
+    @JsonBackReference
     private Category superCategory;
 
     // Self Join: referencing all subcategories (owners) as a parent (target)
-    @OneToMany(mappedBy = "superCategory")
+    @OneToMany(mappedBy = "superCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Category> subCategories;
 
     // one-to-many relation with medication
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Medication> medications;
 
 

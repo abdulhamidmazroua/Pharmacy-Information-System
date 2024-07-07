@@ -7,12 +7,12 @@ function attachMedEventListeners() {
     const medNameSearchInput = document.querySelector("input[name='medication-name']");
     const medCategorySelection = document.querySelector('#medication-search select[name="category"]');
 
-    attachTableListeners();
+    attachMedTableListeners();
 
     if (addMed) {
         addMed.addEventListener('click', function(event) {
             event.preventDefault();
-            modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', baseUrl);
+            modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', 'medicationId', baseUrl);
 
             const buttonHandler = function (event) {
                 modalManager.handleSave(event, 'medication-table', () => modalManager.cleanUp());
@@ -30,23 +30,23 @@ function attachMedEventListeners() {
     }
 
     if (medNameSearchInput) {
-        medNameSearchInput.addEventListener('input', criteriaChangeHandler);
+        medNameSearchInput.addEventListener('input', medCriteriaChangeHandler);
     }
 
     if (medCategorySelection) {
-        medCategorySelection.addEventListener('change', criteriaChangeHandler);
+        medCategorySelection.addEventListener('change', medCriteriaChangeHandler);
     }
 
 }
 
-function attachTableListeners () {
+function attachMedTableListeners () {
     // will use event delegation for handling actions within the table rows
     const medicationTable = document.getElementById('medication-table');
     if (medicationTable) {
         medicationTable.addEventListener('click', function(event) {
 
             if (event.target && event.target.classList.contains('med-link')) {
-                modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', baseUrl);
+                modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', 'medicationId', baseUrl);
                 event.preventDefault();
 
                 const buttonHandler = function (event) {
@@ -131,7 +131,7 @@ function initMedicationForm() {
     document.getElementById('lastUpdateDate').value = formattedDate;
 }
 
-function criteriaChangeHandler() {
+function medCriteriaChangeHandler() {
     const name = document.querySelector("input[name='medication-name']").value.toLowerCase();
     const categoryCode = document.querySelector('#medication-search select[name="category"]').value.toLowerCase();
     searchMedications(name, categoryCode);
@@ -140,15 +140,21 @@ function criteriaChangeHandler() {
 function searchMedications(name, categoryCode) {
     const table = document.getElementById('medication-table');
     const rows = table.getElementsByTagName('tr');
+
+    // define loop variables
+    let currentMedicationLink;
+    let currentName;
+    let currentCategory;
     // start from 1 to skip the header row
     for (let i = 1; i < rows.length; i++) {
-        const currentMedicationLink = rows[i].getElementsByTagName('td')[0].getElementsByTagName('a')[0];
-        const currentName = currentMedicationLink.getAttribute('data-name');
-        const currentCategory = currentMedicationLink.getAttribute('data-category');
-        if (!(currentName.toLowerCase().startsWith(name) && currentCategory.toLowerCase().startsWith(categoryCode))) {
-            rows[i].style.display = 'none';
-        } else {
+        currentMedicationLink = rows[i].getElementsByTagName('td')[0].getElementsByTagName('a')[0];
+        currentName = currentMedicationLink.getAttribute('data-name');
+        currentCategory = currentMedicationLink.getAttribute('data-category');
+        if (currentName.toLowerCase().startsWith(name)
+            && currentCategory.toLowerCase().startsWith(categoryCode)) {
             rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
         }
     }
 }

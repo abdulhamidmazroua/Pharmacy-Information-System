@@ -91,4 +91,15 @@ public class MedicationDAOImpl implements MedicationDAO {
     public void deleteAll() {
         entityManager.remove(findAll());
     }
+
+    @Override
+    public List<Medication> queryMedications(String name, String categoryCode) {
+        TypedQuery<Medication> query = entityManager.createQuery(
+                "FROM Medication m WHERE (m.medicationName = :name OR :name IS NULL) " +
+                                        "AND (m.category.categoryCode = :categoryCode OR :categoryCode IS NULL)",
+                Medication.class);
+        query.setParameter("name", name);
+        query.setParameter("categoryCode", categoryCode);
+        return query.getResultList();
+    }
 }

@@ -1,31 +1,27 @@
-
-<!-- Fragment Content (New Sale) -->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="new-sale">
     <div class="container mt-5 mb-5">
-        <h1 class="h3">New Sale</h1>
-        <form class="sale-form">
-            <div class="form-group">
-                <label for="customer-name">Customer Name</label>
-                <input type="text" class="form-control" id="customer-name" placeholder="Enter customer name">
-            </div>
-            <div class="form-group">
-                <label for="sale-date">Sale Date</label>
-                <input type="date" class="form-control" id="sale-date" value="${#dates.format(new java.util.Date(), 'yyyy-MM-dd')}">
-            </div>
-            <div class="form-group">
-                <label for="barcode-input">Scan Item</label>
-                <input type="text" class="form-control" id="barcode-input" placeholder="Scan or enter item barcode">
+        <h1 class="h3 mb-4">New Sale</h1>
+
+        <form class="sale-form mb-4">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="customer-name" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="customer-name" placeholder="Enter customer name">
+                </div>
+                <div class="col-md-6">
+                    <label for="barcode-input" class="form-label">Scan Item</label>
+                    <input type="text" class="form-control" id="barcode-input" placeholder="Scan or enter item barcode">
+                </div>
             </div>
         </form>
 
-        <div class="table-responsive">
+        <div class="table-responsive mb-4">
             <table class="table table-hover">
                 <thead class="table-light">
                 <tr>
-                    <th>Item Code</th>
-                    <th>Item Name</th>
-                    <th>Quantity</th>
+                    <th>Medication</th>
                     <th>Unit Price</th>
+                    <th>Quantity</th>
                     <th>Total Price</th>
                     <th>Actions</th>
                 </tr>
@@ -36,68 +32,9 @@
             </table>
         </div>
 
-        <div class="d-flex justify-content-end total-amount">
-            <h4>Total Amount: $<span id="total-amount">0.00</span></h4>
-        </div>
-
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-success">Complete Sale</button>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="m-0">Total Amount: $<span id="total-amount">0.00</span></h4>
+            <button class="btn btn-success" id="complete-sale">Complete Sale</button>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const barcodeInput = document.getElementById('barcode-input');
-            const saleItems = document.getElementById('sale-items');
-            const totalAmountSpan = document.getElementById('total-amount');
-            let totalAmount = 0;
-
-            barcodeInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    const itemCode = barcodeInput.value;
-                    // Simulate fetching item details based on barcode
-                    const itemName = 'Sample Item';
-                    const unitPrice = 10.00;
-                    const quantity = 1;
-                    const totalPrice = unitPrice * quantity;
-
-                    // Create a new row for the item
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${itemCode}</td>
-                        <td>${itemName}</td>
-                        <td>${quantity}</td>
-                        <td>$${unitPrice.toFixed(2)}</td>
-                        <td>$${totalPrice.toFixed(2)}</td>
-                        <td><button class="btn btn-danger btn-sm">Remove</button></td>
-                    `;
-                    saleItems.appendChild(newRow);
-
-                    // Update total amount
-                    totalAmount += totalPrice;
-                    totalAmountSpan.innerText = totalAmount.toFixed(2);
-
-                    // Clear the barcode input
-                    barcodeInput.value = '';
-                }
-            });
-
-            // Event delegation for removing items
-            saleItems.addEventListener('click', function(event) {
-                if (event.target.classList.contains('btn-danger')) {
-                    const row = event.target.closest('tr');
-                    const priceCell = row.children[4];
-                    const itemTotalPrice = parseFloat(priceCell.innerText.replace('$', ''));
-
-                    // Remove the item total from the total amount
-                    totalAmount -= itemTotalPrice;
-                    totalAmountSpan.innerText = totalAmount.toFixed(2);
-
-                    // Remove the row from the table
-                    row.remove();
-                }
-            });
-        });
-    </script>
 </div>

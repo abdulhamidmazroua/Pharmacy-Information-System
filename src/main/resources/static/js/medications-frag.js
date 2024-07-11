@@ -12,18 +12,7 @@ function attachMedEventListeners() {
     if (addMed) {
         addMed.addEventListener('click', function(event) {
             event.preventDefault();
-            modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', 'medicationId', baseUrl);
-
-            const buttonHandler = function (event) {
-                modalManager.handleSave(event, 'medication-table', () => modalManager.cleanUp());
-            }
-            const showHandler = function () {
-                modalManager.saveButtonElement.addEventListener('click', buttonHandler);
-            }
-            const hideHandler = function () {
-                modalManager.cleanUp();
-            }
-            modalManager.attachEventListeners(buttonHandler, showHandler, hideHandler)
+            modalManager = prepareMedicationModal();
             initMedicationForm();
             modalManager.modalInstance.show();
         });
@@ -46,20 +35,8 @@ function attachMedTableListeners () {
         medicationTable.addEventListener('click', function(event) {
 
             if (event.target && event.target.classList.contains('med-link')) {
-                modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', 'medicationId', baseUrl);
                 event.preventDefault();
-
-                const buttonHandler = function (event) {
-                    modalManager.handleSave(event, 'medication-table', () => modalManager.cleanUp());
-                }
-                const showHandler = function () {
-                    modalManager.saveButtonElement.addEventListener('click', buttonHandler);
-                }
-                const hideHandler = function () {
-                    modalManager.cleanUp();
-                }
-                modalManager.attachEventListeners(buttonHandler, showHandler, hideHandler)
-
+                modalManager = prepareMedicationModal();
                 populateMedicationForm(event.target);
                 modalManager.modalInstance.show();
             }
@@ -72,7 +49,9 @@ function attachMedTableListeners () {
                 // pass the attachTableListeners function as the successCallback parameter
                 // to reattach the listeners.
                 // However, this will not happen because we are using event delegation
-                createRequest(url, 'POST', null, 'medication-table', null);
+                createRequest(url, 'POST', "text/html", null,(responseText) => {
+                    partialUpdateElement(responseText, 'medication-table');
+                });
             }
         });
     }
@@ -80,6 +59,24 @@ function attachMedTableListeners () {
 }
 
 // Helper functions
+function prepareMedicationModal() {
+    modalManager = new ModalManager('medicationModal', 'save-medication', 'medicationForm', 'medicationId', baseUrl);
+
+    const buttonHandler = function () {
+        modalManager.handleSave(((newElement) => partialUpdateElement(newElement, 'medication-table')));
+    }
+
+    const showHandler = function () {
+        modalManager.saveButtonElement.addEventListener('click', buttonHandler);
+    }
+    const hideHandler = function () {
+        modalManager.cleanUp();
+    }
+    modalManager.attachEventListeners(buttonHandler, showHandler, hideHandler);
+
+    return modalManager
+}
+
 function populateMedicationForm(link) {
     // Populate form fields for editing
     document.getElementById('medicationModalLabel').innerText = 'Edit Medication';

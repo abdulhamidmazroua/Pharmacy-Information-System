@@ -27,13 +27,13 @@ class ModalManager {
         modalManager.modalElement.addEventListener('hidden.bs.modal', hideHandler);
     }
 
-    handleSave(event, targetElementId, successCallback) {
-        event.preventDefault();
+    handleSave(successCallback) {
         const href = this.formElement.href;
         const url = this.baseUrl + '/' + href;
         const formData = new FormData(this.formElement);
         const params = new URLSearchParams(formData);
-        createRequest(url, 'POST', params, targetElementId, () => {
+        createRequest(url, 'POST', "text/html", params, (responseText) => {
+            successCallback(responseText);
             this.modalInstance.hide();
         });
     }
@@ -69,43 +69,21 @@ class ModalManager {
 // Asynchronous request (ajax)
 // successCallback:
 // is added to execute a function after the response is successfully returned
-// targetElementId:
-// 1- If the method == POST then it specifies the element that will be affected
-// in response to the data change (ex: table will be reloaded after add/update/delete)
-// 2- If the method == GET then it is null since it is not a partial update
-// and the whole fragment will be replaced
-function createRequest (url, method, params, targetElementId, successCallback) {
-    const httpRequest = new XMLHttpRequest(url);
+function createRequest (url, method, accepts, params, successCallback) {
+    const httpRequest = new XMLHttpRequest();
     httpRequest.addEventListener('readystatechange', (ajax_url) => {
         if (httpRequest.readyState === 4) {
-            if (httpRequest.status === 200) {
-                let target;
-                let newContent;
-                // This is based on the assumption that
-                // only POST ajax requests will be for
-                // partial target update (like updating the table)
-                // otherwise (for GET requests), we will update the whole fragment
-                // by updating the main-content
-                if (method === 'POST') {
-                    const doc = new DOMParser().parseFromString(httpRequest.responseText, 'text/html');
-                    newContent = doc.getElementById(targetElementId);
-                    target = document.getElementById(targetElementId);
-                    target.innerHTML = newContent.innerHTML;
-                } else {
-                    newContent = httpRequest.responseText;
-                    target = document.getElementById('main-content');
-                    target.innerHTML = newContent;
-                    history.pushState(null, '', url);
-                }
-                if (successCallback) successCallback();
-            } else {
-                console.log('Ajax Request did not succeed, url: ' + url);
-            }
+            handleResponse(url, httpRequest, successCallback);
         }
     });
+    // For GET requests, append the params to the URL
+    if (method === 'GET' && params) {
+        url += '?' + params.toString();
+    }
     httpRequest.open(method, url, true);
-    httpRequest.setRequestHeader("Accept", "text/html");
-    httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+    httpRequest.setRequestHeader("Accept", accepts);
+    httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    // For POST requests, add the required headers
     if (method === 'POST') {
         // Get CSRF token from meta tag
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -116,11 +94,34 @@ function createRequest (url, method, params, targetElementId, successCallback) {
     httpRequest.send(params);
 }
 
+// Function for handling the ajax response
+function handleResponse(url, httpRequest, successCallback) {
+    if (httpRequest.status === 200) {
+        if (successCallback) {
+            successCallback(httpRequest.responseText);
+        }
+    } else {
+        console.log('Ajax Request did not succeed, url: ' + url);
+    }
+}
+
+// Function for partial update UI elements
+function partialUpdateElement(httpResponseText, targetElementId) {
+    const doc = new DOMParser().parseFromString(httpResponseText, 'text/html');
+    const newElement = doc.getElementById(targetElementId);
+    const targetElement = document.getElementById(targetElementId);
+    targetElement.innerHTML = newElement.innerHTML;
+}
+
+// Function for changing the whole fragment
+function replaceFragment(newFragment, url) {
+    const fragment = document.getElementById('main-content');
+    fragment.innerHTML = newFragment;
+    history.pushState(null, '', url);
+}
+
 // Function to dynamically load and execute page-specific scripts
-// only if they are not already executed
-
-
-function executePageSpecificScript(fragmentId) {
+function executeFragmentScript(fragmentId) {
     if ( fragmentId) {
         const script = document.createElement('script');
         script.src = `/pharmacy-ms/js/${fragmentId}.js`;
@@ -139,9 +140,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handling backward and forward buttons in browser
     window.addEventListener('popstate', function(event) {
         const url = window.location.href;
-        const targetElementId = window.location.pathname.replace('/pharmacy-ms/', '') + '-frag';
-        createRequest(url, 'GET', null, null, function () {
-            executePageSpecificScript(targetElementId); // here the targetElementId will be the new fragment id
+        const newFragmentId = window.location.pathname.replace('/pharmacy-ms/', '') + '-frag';
+        createRequest(url, 'GET', "text/html", null, (responseText) => {
+            replaceFragment(responseText, url); // this is for updating the fragment in the layout
+            executeFragmentScript(newFragmentId); // this is for re-executing the javascript for that fragment
         });
     });
 
@@ -156,10 +158,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Get the href attribute of the clicked link
                     const href = this.getAttribute('href');
                     const url = baseUrl + '/' + href;
-                    const targetFragmentId = href + '-frag';
+                    const newFragmentId = href + '-frag';
                     console.log(url);
-                    createRequest(url, 'GET', null, null, function () {
-                        executePageSpecificScript(targetFragmentId); // here the targetElementId will be the new fragment id
+                    createRequest(url, 'GET', "text/html", null, (responseText) => {
+                        replaceFragment(responseText, url); // this is for updating the fragment in the layout
+                        executeFragmentScript(newFragmentId); // this is for re-executing the javascript for that fragment
                     });
                 });
             });
@@ -167,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // initial load script
     const initialFragmentId = document.getElementById('main-content').getAttribute('data-id');
-    executePageSpecificScript(initialFragmentId);
+    executeFragmentScript(initialFragmentId);
 })
 
 

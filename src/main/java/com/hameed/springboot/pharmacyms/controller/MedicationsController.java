@@ -7,6 +7,7 @@ import com.hameed.springboot.pharmacyms.service.UnitOfMeasureService;
 import com.hameed.springboot.pharmacyms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.print.Pageable;
+import java.util.List;
 
 
 @Controller
@@ -85,5 +88,34 @@ public class MedicationsController {
         medicationService.deleteMedication(id);
         return "redirect:/medications";
     }
+
+
+//    // this will be used later in the above showAllMedications endpoint
+//    @GetMapping("/page")
+//    public String showMedicationsPage(@RequestParam("page") int page, @RequestParam("size") int size, Model model, @ModelAttribute List<Medication> medications) {
+//        Pageable pageable = (Pageable) PageRequest.of(page, size);
+//        model.addAttribute("medications", medications);
+//        return "medications-page";
+//    }
+
+//    // this will be used later for implementing
+//    @GetMapping("/search/all")
+//    @ResponseBody
+//    public String searchMedications(Model model,
+//                                    @RequestParam(value = "medicationName", required = false) String medicationName,
+//                                    @RequestParam(value = "categoryCode", required = false) String CategoryCode) {
+//        model.addAttribute("medications", medicationService.searchMedications(medicationName, CategoryCode));
+//        return "/medications/page";
+//    }
+
+    // medication service endpoint for searching for a medication
+    // we should include another one of this for the medication barcode
+    @GetMapping("/search")
+    @ResponseBody
+    public Medication getMedicationByName(@RequestParam(value = "medicationName", required = true) String medicationName) {
+        return medicationService.getMedicationByName(medicationName);
+    }
+
+
 
 }

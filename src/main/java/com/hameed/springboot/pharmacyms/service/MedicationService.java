@@ -7,7 +7,9 @@ import java.util.List;
 public interface MedicationService {
     Medication getMedicationById(Long id);
     List<Medication> getAllMedications();
-    Medication createMedication(Medication medication);
-    Medication updateMedication(Medication medication);
+    void createMedication(Medication medication);
+    void updateMedication(Medication medication);
     void deleteMedication(Long id);
+    Medication getMedicationByName(String name);
+    List<Medication> searchMedications(String name, String categoryCode);
 }

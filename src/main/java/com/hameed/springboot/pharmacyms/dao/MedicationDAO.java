@@ -20,4 +20,7 @@ public interface MedicationDAO {
     public void deleteAll(List<Medication> medications);
     public void deleteAll();
 
+    // query methods
+    public List<Medication> queryMedications(String name, String categoryCode);
+
 }

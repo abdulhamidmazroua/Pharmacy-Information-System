@@ -34,22 +34,22 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     @Transactional
-    public Medication createMedication(Medication medication) {
+    public void createMedication(Medication medication) {
         medication.setCreatedBy(userService.getLoggedInUsername());
         medication.setLastUpdateBy("-1");
         medication.setCreationDate(new Date());
         medication.setLastUpdateDate(new Date());
         medicationDAO.save(medication);
-        return medication;
+//        return medication;
     }
 
     @Override
     @Transactional
-    public Medication updateMedication(Medication medication) {
+    public void updateMedication(Medication medication) {
         medication.setLastUpdateBy(userService.getLoggedInUsername());
         medication.setLastUpdateDate(new Date());
         medicationDAO.save(medication);
-        return medication;
+//        return medication;
     }
 
     @Override
@@ -57,4 +57,16 @@ public class MedicationServiceImpl implements MedicationService {
     public void deleteMedication(Long id) {
         medicationDAO.deleteById(id);
     }
+
+    @Override
+    public Medication getMedicationByName(String name) {
+        return medicationDAO.findByName(name);
+    }
+
+    @Override
+    @Transactional
+    public List<Medication> searchMedications(String name, String categoryCode) {
+        return medicationDAO.queryMedications(name, categoryCode);
+    }
+
 }

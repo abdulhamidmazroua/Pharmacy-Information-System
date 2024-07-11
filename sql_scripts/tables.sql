@@ -78,7 +78,6 @@ CREATE TABLE MEDICATION (
 CREATE TABLE SALES_HEADER (
                               id BIGINT PRIMARY KEY AUTO_INCREMENT,
                               customer_name VARCHAR(255) NOT NULL,
-                              date DATE NOT NULL,
                               total_amount DOUBLE NOT NULL,
                               username VARCHAR(50),
                               creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

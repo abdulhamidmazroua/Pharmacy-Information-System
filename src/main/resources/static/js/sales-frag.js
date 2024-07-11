@@ -16,8 +16,9 @@ function attachSalesListeners() {
             const href = event.target.getAttribute('href');
             const url = baseUrl + '/' + href;
             console.log(url);
-            createRequest(url, 'GET', null, null, () => {
-                executePageSpecificScript('new-sale-frag');
+            createRequest(url, 'GET', "text/html", null, (responseText) => {
+                replaceFragment(responseText, url); // this is for updating the fragment in the layout
+                executeFragmentScript('new-sale-frag'); // this is for re-executing the javascript for that fragment
             });
         });
     }
@@ -76,7 +77,9 @@ function attachSaleTableListeners() {
                 // pass the attachTableListeners function as the successCallback parameter
                 // to reattach the listeners.
                 // However, this will not happen because we are using event delegation
-                createRequest(url, 'POST', null, 'sales-table', null);
+                createRequest(url, 'POST', "text/html", null,(responseText) => {
+                    partialUpdateElement(responseText, 'sales-table');
+                });
             }
         });
     }

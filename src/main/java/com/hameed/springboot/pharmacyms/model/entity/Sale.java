@@ -16,7 +16,7 @@ public class Sale extends AbstractEntity implements Serializable {
     private String customerName;
 
     @Column(name = "total_amount")
-    private String totalAmount;
+    private Double totalAmount;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -25,7 +25,7 @@ public class Sale extends AbstractEntity implements Serializable {
     public Sale() {
     }
 
-    public Sale(String createdBy, String lastUpdateBy, String customerName, String totalAmount) {
+    public Sale(String createdBy, String lastUpdateBy, String customerName, Double totalAmount) {
         super(createdBy, lastUpdateBy);
         this.customerName = customerName;
         this.totalAmount = totalAmount;
@@ -39,11 +39,11 @@ public class Sale extends AbstractEntity implements Serializable {
         this.customerName = customerName;
     }
 
-    public String getTotalAmount() {
+    public Double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(String totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
